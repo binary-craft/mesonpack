@@ -37,7 +37,6 @@ echo "===> Meson build is done"
 
 # 5. Copy runtime files
 echo "Copying runtime files..."
-ls -al
 find ./ -type f -name "${meson_name}" -exec cp "{}" "${meson_layer}/" \;
 find ./ -type f -name "*.so" -exec cp "{}" "${meson_layer}/" \;
 
