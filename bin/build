@@ -3,9 +3,9 @@ set -eo pipefail
 
 # 0. Setup initial values
 compile_args=${BP_MESON_COMPILE_ARGS:-""}
+meson_layer=${CNB_LAYERS_DIR}/meson
 setup_args=${BP_MESON_SETUP_ARGS:-""}
 test_args=${BP_MESON_TEST_ARGS:-""}
-meson_layer="${CNB_LAYERS_DIR}"/meson
 
 echo "===> Meson buildpack is starting"
 echo "Setup args are: ${setup_args}"
@@ -18,8 +18,7 @@ mkdir -p "${meson_layer}"
 
 # 2. Setup Meson
 echo "===> Setting up Meson in $(pwd)/build"
-# shellcheck disable=SC2086
-meson setup build ${setup_args}
+eval meson setup build "${setup_args}"
 cd build
 
 # 3. Get meson properties
@@ -29,10 +28,8 @@ meson_version=$(meson introspect . --projectinfo | jq -r '.version')
 
 # 4. Build with Meson
 echo "===> Building with Meson for ${meson_name}:${meson_version}"
-# shellcheck disable=SC2086
-meson compile ${compile_args}
-# shellcheck disable=SC2086
-meson test ${test_args}
+eval meson compile "${compile_args}"
+eval meson test "${test_args}"
 echo "===> Meson build is done"
 
 # 5. Copy runtime files
